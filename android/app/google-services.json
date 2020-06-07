@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "917123372105",
+    "firebase_url": "https://fthve2.firebaseio.com",
+    "project_id": "fthve2",
+    "storage_bucket": "fthve2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917123372105:android:7200033262d4a0ab8d1b98",
+        "android_client_info": {
+          "package_name": "com.yogiraj.fthve2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "917123372105-10tm6ua7jjlfdol5hrhuki6j6qh6sejl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yogiraj.fthve2",
+            "certificate_hash": "8ab592c5ef9509a2c1ad59f9d69313cadc478570"
+          }
+        },
+        {
+          "client_id": "917123372105-9dfjin0o92ringg9dg6m7v8u0er8pors.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOFo3tLp5-ruv7PU1-5_qhQqv5jyimhQw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "917123372105-9dfjin0o92ringg9dg6m7v8u0er8pors.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

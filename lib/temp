@@ -1,0 +1,328 @@
+import 'package:fthve2/Screens/loginScreen.dart';
+import 'package:fthve2/Screens/mapScreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fthve2/Services/userData.dart';
+
+class registerScreen extends StatefulWidget {
+  static String id = "registerScreen";
+
+  @override
+  _registerScreenState createState() => _registerScreenState();
+}
+
+class _registerScreenState extends State<registerScreen> {
+  String imageUrl = "images/registerbackground.png";
+  String phoneNo;
+  String smsOTP;
+  String verificationId;
+  String errorMessage = '';
+  final _auth = FirebaseAuth.instance;
+  String _mobile;
+  static bool sendCodeClicked=false;
+String buttonText= "Send Code";
+  String _otp;
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    double defaultScreenWidth = 414.0;
+    double defaultScreenHeight = 896.0;
+    if (MediaQuery.of(context).size.width > 750) {
+      imageUrl = "assets/ipadregisterbackground.png";
+    }
+    ScreenUtil.init(context,
+        width: defaultScreenWidth,
+        height: defaultScreenHeight,
+        allowFontScaling: false);
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).requestFocus(new FocusNode());
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: Container(
+            constraints: BoxConstraints.expand(),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/registerbackground.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(
+                      top: ScreenUtil().setHeight(335),
+                    ),
+                    width: 300.w,
+                    height: 70.h,
+                    child: Text(
+                      "Buying directly from farmers is your greatest contribution",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w100,
+                        fontSize: ScreenUtil().setSp(20),
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: ScreenUtil().setWidth(20),
+                      right: ScreenUtil().setWidth(20),
+                      bottom: ScreenUtil().setHeight(30),
+                    ),
+                    padding: EdgeInsets.only(
+                      bottom: ScreenUtil().setHeight(20),
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(
+                        ScreenUtil().setSp(10),
+                      ),
+                    ),
+                    width: 400.w,
+                    height: 380.h,
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.only(
+                            top: ScreenUtil().setHeight(30),
+                          ),
+                          child: Text(
+                            "Let's Connect",
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontWeight: FontWeight.w400,
+                              fontSize: ScreenUtil().setSp(25),
+                              color: Color(0xFF0CBA77),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: ScreenUtil().setHeight(10),
+                            horizontal: ScreenUtil().setWidth(20),
+                          ),
+                          child: TextField(
+                            onChanged: (value) {
+                              _mobile = "+91" + value;
+                            },
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'OpenSans',
+                              fontWeight: FontWeight.w100,
+                              fontSize: ScreenUtil().setSp(17),
+                              color: Color(0xFF18BA77),
+                            ),
+                            decoration: InputDecoration(
+                              prefixText: "+91",
+                              prefixStyle: TextStyle(
+                                fontFamily: 'OpenSans',
+                                fontWeight: FontWeight.w100,
+                                fontSize: ScreenUtil().setSp(17),
+                                color: Color(0xFF18BA77),
+                              ),
+                              hintText: "Tell us your mobile Number",
+                              hintStyle: TextStyle(
+                                  fontFamily: 'OpenSans',
+                                  fontSize: ScreenUtil().setSp(17),
+                                  color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            vertical: ScreenUtil().setHeight(10),
+                            horizontal: ScreenUtil().setWidth(20),
+                          ),
+                          child: TextField(
+                            onChanged: (value) {
+                              _otp = value;
+                            },
+                            keyboardType: TextInputType.number,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'OpenSans',
+                              fontWeight: FontWeight.w100,
+                              fontSize: ScreenUtil().setSp(17),
+                              color: Color(0xFF18BA77),
+                            ),
+                            decoration: InputDecoration(
+                              hintText: "Tell us the Code we sent you",
+                              hintStyle: TextStyle(
+                                  fontFamily: 'OpenSans',
+                                  fontSize: ScreenUtil().setSp(17),
+                                  color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: ScreenUtil().setHeight(20),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setWidth(10),
+                            vertical: ScreenUtil().setHeight(10),
+                          ),
+                          width: 250.w,
+                          height: 70.h,
+                          child: FlatButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                ScreenUtil().setSp(30),
+                              ),
+                            ),
+                            color: Color(0xFF18BA77),
+                            onPressed: () {
+                              if(sendCodeClicked==true){
+                                _auth.currentUser().then((user) {
+                                  if (user != null) {
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pushReplacementNamed(mapScreen.id);
+                                  } else {
+                                    signIn();
+                                  }
+                                });
+                              }
+                              else if(sendCodeClicked==false){
+                                setState(() {
+                                  buttonText="Verify";
+                                });
+                                sendCodeClicked=true;
+                              }
+
+                              this.phoneNo = _mobile;
+                              verifyPhone();
+                              UserData().Setter("mobile",phoneNo);
+                              //}
+                            },
+                            child: Text(
+
+                              buttonText,
+                              style: TextStyle(
+                                fontFamily: "OpenSans",
+                                fontWeight: FontWeight.w100,
+                                color: Colors.white,
+                                fontSize: ScreenUtil().setSp(17),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setWidth(10),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Already have account, ",
+                                style: TextStyle(
+                                    fontFamily: "Raleway",
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: ScreenUtil().setSp(16),
+                                    color: Colors.grey),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, loginScreen.id);
+                                },
+                                child: Text(
+                                  "Login",
+                                  style: TextStyle(
+                                      fontFamily: "Roboto",
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: ScreenUtil().setSp(16),
+                                      color: Color(0xFF18BA77)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+  //User Authentication
+
+  Future<void> verifyPhone() async {
+    final PhoneCodeSent smsOTPSent = (String verId, [int forceCodeResend]) {
+      this.verificationId = verId;
+    };
+    try {
+      await _auth.verifyPhoneNumber(
+          phoneNumber: this.phoneNo,
+          // PHONE NUMBER TO SEND OTP
+          codeAutoRetrievalTimeout: (String verId) {
+            //Starts the phone number verification process for the given phone number.
+            //Either sends an SMS with a 6 digit code to the phone number specified, or sign's the user in and [verificationCompleted] is called.
+            this.verificationId = verId;
+          },
+          codeSent: smsOTPSent,
+          // WHEN CODE SENT THEN WE OPEN DIALOG TO ENTER OTP.
+          timeout: const Duration(seconds: 20),
+          verificationCompleted: (AuthCredential phoneAuthCredential) {
+            print(phoneAuthCredential);
+          },
+          verificationFailed: (AuthException exceptio) {
+            print('${exceptio.message}');
+          });
+    } catch (e) {
+      handleError(e);
+    }
+  }
+
+  signIn() async {
+    try {
+      final AuthCredential credential = PhoneAuthProvider.getCredential(
+        verificationId: verificationId,
+        smsCode: smsOTP,
+      );
+      final FirebaseUser user =
+          (await _auth.signInWithCredential(credential)).user;
+      final FirebaseUser currentUser = await _auth.currentUser();
+      assert(user.uid == currentUser.uid);
+      Navigator.of(context).pop();
+      Navigator.of(context).pushReplacementNamed(mapScreen.id);
+    } catch (e) {
+      handleError(e);
+    }
+  }
+
+  handleError(PlatformException error) {
+    print(error);
+    switch (error.code) {
+      case 'ERROR_INVALID_VERIFICATION_CODE':
+        FocusScope.of(context).requestFocus(new FocusNode());
+        Navigator.of(context).pop();
+        setState(() {
+          errorMessage = 'Invalid Code';
+        });
+        break;
+      default:
+        setState(() {
+          errorMessage = error.message;
+        });
+
+        break;
+    }
+  }
+
+}
